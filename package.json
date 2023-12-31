@@ -21,7 +21,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/onesine/react-tailwindcss-select"
+        "url": "https://github.com/flyneko/react-tailwindcss-select"
     },
     "keywords": [
         "combobox",
