@@ -9,6 +9,7 @@ import SearchInput from "./SearchInput";
 import SelectProvider from "./SelectProvider";
 import Spinner from "./Spinner";
 import { Option, Options as ListOption, SelectProps } from "./type";
+import { Popover } from 'react-tiny-popover';
 
 const Select: React.FC<SelectProps> = ({
     options = [],
@@ -178,129 +179,132 @@ const Select: React.FC<SelectProps> = ({
             handleValueChange={handleValueChange}
         >
             <div className="relative w-full" ref={ref}>
-                <div
-                    aria-expanded={open}
-                    onKeyDown={onPressEnterOrSpace}
-                    onClick={toggle}
-                    className={getSelectClass()}
-                >
-                    <div className="grow pl-2.5 py-2 pr-2 flex flex-wrap gap-1">
-                        {!isMultiple ? (
-                            <p className="truncate cursor-default select-none">
-                                {value && !Array.isArray(value) ? value.label : placeholder}
-                            </p>
-                        ) : (
-                            <>
-                                {value === null && placeholder}
+                <Popover
+                    isOpen={open}
+                    content={(
+                        <div
+                            className={
+                                classNames?.menu
+                                    ? classNames.menu
+                                    : " bg-white shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700"
+                            }
+                        >
+                            {isSearchable && (
+                                <SearchInput
+                                    ref={searchBoxRef}
+                                    value={inputValue}
+                                    placeholder={searchInputPlaceholder}
+                                    onChange={e => {
+                                        if (
+                                            onSearchInputChange &&
+                                            typeof onSearchInputChange === "function"
+                                        )
+                                            onSearchInputChange(e);
+                                        setInputValue(e.target.value);
+                                    }}
+                                />
+                            )}
 
-                                {Array.isArray(value) &&
-                                    value.map((item, index) => (
-                                        <div className={getTagItemClass(item)} key={index}>
-                                            <p
-                                                className={
-                                                    classNames?.tagItemText
-                                                        ? classNames.tagItemText
-                                                        : "text-gray-600 truncate cursor-default select-none"
-                                                }
-                                            >
-                                                {item.label}
-                                            </p>
-                                            {!isDisabled && (
-                                                <div
-                                                    role="button"
-                                                    tabIndex={0}
-                                                    onClick={e => removeItem(e, item)}
+                            <Options
+                                list={list}
+                                noOptionsMessage={noOptionsMessage}
+                                text={!onSearchInputChange ? inputValue : ''}
+                                isMultiple={isMultiple}
+                                value={value}
+                                primaryColor={primaryColor || DEFAULT_THEME}
+                            />
+                        </div>
+                    )}
+                >
+                    <div
+                        aria-expanded={open}
+                        onKeyDown={onPressEnterOrSpace}
+                        onClick={toggle}
+                        className={getSelectClass()}
+                    >
+                        <div className="grow pl-2.5 py-2 pr-2 flex flex-wrap gap-1">
+                            {!isMultiple ? (
+                                <p className="truncate cursor-default select-none">
+                                    {value && !Array.isArray(value) ? value.label : placeholder}
+                                </p>
+                            ) : (
+                                <>
+                                    {value === null && placeholder}
+
+                                    {Array.isArray(value) &&
+                                        value.map((item, index) => (
+                                            <div className={getTagItemClass(item)} key={index}>
+                                                <p
                                                     className={
-                                                        classNames?.tagItemIconContainer
-                                                            ? classNames.tagItemIconContainer
-                                                            : "flex items-center px-1 cursor-pointer rounded-r-sm hover:bg-red-200 hover:text-red-600"
+                                                        classNames?.tagItemText
+                                                            ? classNames.tagItemText
+                                                            : "text-gray-600 truncate cursor-default select-none"
                                                     }
                                                 >
-                                                    <CloseIcon
+                                                    {item.label}
+                                                </p>
+                                                {!isDisabled && (
+                                                    <div
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        onClick={e => removeItem(e, item)}
                                                         className={
-                                                            classNames?.tagItemIcon
-                                                                ? classNames.tagItemIcon
-                                                                : "w-3 h-3 mt-0.5"
+                                                            classNames?.tagItemIconContainer
+                                                                ? classNames.tagItemIconContainer
+                                                                : "flex items-center px-1 cursor-pointer rounded-r-sm hover:bg-red-200 hover:text-red-600"
                                                         }
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                            </>
-                        )}
-                    </div>
-
-                    <div className="flex flex-none items-center py-1.5">
-                        {loading && (
-                            <div className="px-1.5">
-                                <Spinner primaryColor={primaryColor} />
-                            </div>
-                        )}
-
-                        {isClearable && !isDisabled && value !== null && (
-                            <div className="px-1.5 cursor-pointer" onClick={clearValue}>
-                                <CloseIcon
-                                    className={
-                                        classNames?.closeIcon
-                                            ? classNames.closeIcon
-                                            : "w-5 h-5 p-0.5"
-                                    }
-                                />
-                            </div>
-                        )}
-
-                        <div className="h-full">
-                            <span className="w-px h-full inline-block text-white bg-gray-300 text-opacity-0" />
+                                                    >
+                                                        <CloseIcon
+                                                            className={
+                                                                classNames?.tagItemIcon
+                                                                    ? classNames.tagItemIcon
+                                                                    : "w-3 h-3 mt-0.5"
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                </>
+                            )}
                         </div>
 
-                        {showChevron && (
-                            <div className="px-1.5">
-                                <ChevronIcon
-                                    className={`transition duration-300 w-6 h-6 p-0.5${open ? " transform rotate-90 text-gray-500" : " text-gray-300"
-                                        }`}
-                                />
+                        <div className="flex flex-none items-center py-1.5">
+                            {loading && (
+                                <div className="px-1.5">
+                                    <Spinner primaryColor={primaryColor} />
+                                </div>
+                            )}
+
+                            {isClearable && !isDisabled && value !== null && (
+                                <div className="px-1.5 cursor-pointer" onClick={clearValue}>
+                                    <CloseIcon
+                                        className={
+                                            classNames?.closeIcon
+                                                ? classNames.closeIcon
+                                                : "w-5 h-5 p-0.5"
+                                        }
+                                    />
+                                </div>
+                            )}
+
+                            <div className="h-full">
+                                <span className="w-px h-full inline-block text-white bg-gray-300 text-opacity-0" />
                             </div>
-                        )}
 
-                        
+                            {showChevron && (
+                                <div className="px-1.5">
+                                    <ChevronIcon
+                                        className={`transition duration-300 w-6 h-6 p-0.5${open ? " transform rotate-90 text-gray-500" : " text-gray-300"
+                                            }`}
+                                    />
+                                </div>
+                            )}
+
+
+                        </div>
                     </div>
-                </div>
-
-                {open && !isDisabled && (
-                    <div
-                        className={
-                            classNames?.menu
-                                ? classNames.menu
-                                : "absolute z-10 w-full bg-white shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700"
-                        }
-                    >
-                        {isSearchable && (
-                            <SearchInput
-                                ref={searchBoxRef}
-                                value={inputValue}
-                                placeholder={searchInputPlaceholder}
-                                onChange={e => {
-                                    if (
-                                        onSearchInputChange &&
-                                        typeof onSearchInputChange === "function"
-                                    )
-                                        onSearchInputChange(e);
-                                    setInputValue(e.target.value);
-                                }}
-                            />
-                        )}
-
-                        <Options
-                            list={list}
-                            noOptionsMessage={noOptionsMessage}
-                            text={!onSearchInputChange ? inputValue : ''}
-                            isMultiple={isMultiple}
-                            value={value}
-                            primaryColor={primaryColor || DEFAULT_THEME}
-                        />
-                    </div>
-                )}
+                </Popover>
             </div>
         </SelectProvider>
     );
