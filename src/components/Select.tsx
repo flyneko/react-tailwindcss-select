@@ -177,6 +177,7 @@ const Select: React.FC<SelectProps> = ({
             <div className="relative w-full" ref={ref}>
                 <Popover
                     isOpen={open}
+                    positions={['top', 'bottom']}
                     containerClassName="z-[9999]"
                     reposition={true}
                     onClickOutside={closeDropDown}

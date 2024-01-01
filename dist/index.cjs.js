@@ -33362,7 +33362,7 @@ const Select = ({ options = [], value = null, onChange, onSearchInputChange, pla
             classNames
         }, value: value, handleValueChange: handleValueChange },
         React__default["default"].createElement("div", { className: "relative w-full", ref: ref },
-            React__default["default"].createElement(Popover.Popover, { isOpen: open, containerClassName: "z-[9999]", reposition: true, onClickOutside: closeDropDown, padding: 5, content: ({ childRect }) => (React__default["default"].createElement("div", { style: { minWidth: childRect.width + 'px' }, className: classNames?.menu
+            React__default["default"].createElement(Popover.Popover, { isOpen: open, positions: ['top', 'bottom'], containerClassName: "z-[9999]", reposition: true, onClickOutside: closeDropDown, padding: 5, content: ({ childRect }) => (React__default["default"].createElement("div", { style: { minWidth: childRect.width + 'px' }, className: classNames?.menu
                         ? classNames.menu
                         : " bg-white shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700" },
                     isSearchable && (React__default["default"].createElement(SearchInput, { ref: searchBoxRef, value: inputValue, placeholder: searchInputPlaceholder, onChange: e => {
