@@ -36,6 +36,7 @@ const Select: React.FC<SelectProps> = ({
     const [inputValue, setInputValue] = useState<string>("");
     const ref = useRef<HTMLDivElement>(null);
     const searchBoxRef = useRef<HTMLInputElement>(null);
+    const [menuVisibility, setMenuVisibility] = useState(false);
 
     useEffect(() => {
         const formatItem = (item: Option) => {
@@ -69,6 +70,13 @@ const Select: React.FC<SelectProps> = ({
             }
         }
     }, [open, isSearchable]);
+
+    useEffect(() => {
+        if (open) 
+            setTimeout(() => setMenuVisibility(true));
+        else
+            setMenuVisibility(false)
+    }, [open])
 
     const toggle = useCallback(() => {
         if (!isDisabled) {
@@ -184,7 +192,7 @@ const Select: React.FC<SelectProps> = ({
                     padding={5}
                     content={({ childRect }) => (
                         <div
-                            style={{ minWidth: childRect.width + 'px' }}
+                            style={{ minWidth: childRect.width + 'px', opacity: +menuVisibility }}
                             className={
                                 classNames?.menu
                                     ? classNames.menu
