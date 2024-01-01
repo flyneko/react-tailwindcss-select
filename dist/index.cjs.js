@@ -144,23 +144,6 @@ const THEME_DATA = {
     }
 };
 
-function useOnClickOutside(ref, handler) {
-    React.useEffect(() => {
-        const listener = (event) => {
-            if (!ref.current || ref.current.contains(event.target)) {
-                return;
-            }
-            handler(event);
-        };
-        document.addEventListener("mousedown", listener);
-        document.addEventListener("touchstart", listener);
-        return () => {
-            document.removeEventListener("mousedown", listener);
-            document.removeEventListener("touchstart", listener);
-        };
-    }, [ref, handler]);
-}
-
 const CloseIcon = ({ className = "" }) => {
     return (React__default["default"].createElement("svg", { className: className, fill: "currentColor", viewBox: "0 0 20 20", xmlns: "http://www.w3.org/2000/svg" },
         React__default["default"].createElement("path", { fillRule: "evenodd", d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z", clipRule: "evenodd" })));
@@ -33317,9 +33300,6 @@ const Select = ({ options = [], value = null, onChange, onSearchInputChange, pla
         if (open)
             setOpen(false);
     }, [open]);
-    useOnClickOutside(ref, () => {
-        closeDropDown();
-    });
     const onPressEnterOrSpace = React.useCallback((e) => {
         e.preventDefault();
         if ((e.code === "Enter" || e.code === "Space") && !isDisabled) {
@@ -33382,7 +33362,7 @@ const Select = ({ options = [], value = null, onChange, onSearchInputChange, pla
             classNames
         }, value: value, handleValueChange: handleValueChange },
         React__default["default"].createElement("div", { className: "relative w-full", ref: ref },
-            React__default["default"].createElement(Popover.Popover, { isOpen: open, content: (React__default["default"].createElement("div", { className: classNames?.menu
+            React__default["default"].createElement(Popover.Popover, { isOpen: open, positions: ['top'], onClickOutside: closeDropDown, padding: 10, content: ({ childRect }) => (React__default["default"].createElement("div", { style: { width: childRect.width + 'px' }, className: classNames?.menu
                         ? classNames.menu
                         : " bg-white shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700" },
                     isSearchable && (React__default["default"].createElement(SearchInput, { ref: searchBoxRef, value: inputValue, placeholder: searchInputPlaceholder, onChange: e => {

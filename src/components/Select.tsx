@@ -80,10 +80,6 @@ const Select: React.FC<SelectProps> = ({
         if (open) setOpen(false);
     }, [open]);
 
-    useOnClickOutside(ref, () => {
-        closeDropDown();
-    });
-
     const onPressEnterOrSpace = useCallback(
         (e: React.KeyboardEvent<HTMLDivElement>) => {
             e.preventDefault();
@@ -181,8 +177,12 @@ const Select: React.FC<SelectProps> = ({
             <div className="relative w-full" ref={ref}>
                 <Popover
                     isOpen={open}
-                    content={(
+                    positions={['top']}
+                    onClickOutside={closeDropDown}
+                    padding={10}
+                    content={({ childRect }) => (
                         <div
+                            style={{ width: childRect.width + 'px' }}
                             className={
                                 classNames?.menu
                                     ? classNames.menu

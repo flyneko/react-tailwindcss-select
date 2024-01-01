@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useMemo, useContext, useCallback, forwardRef, useState, useRef } from 'react';
+import React, { createContext, useMemo, useContext, useCallback, forwardRef, useState, useRef, useEffect } from 'react';
 
 const COLORS = [
     "blue",
@@ -137,23 +137,6 @@ const THEME_DATA = {
         rose: "hover:text-rose-500"
     }
 };
-
-function useOnClickOutside(ref, handler) {
-    useEffect(() => {
-        const listener = (event) => {
-            if (!ref.current || ref.current.contains(event.target)) {
-                return;
-            }
-            handler(event);
-        };
-        document.addEventListener("mousedown", listener);
-        document.addEventListener("touchstart", listener);
-        return () => {
-            document.removeEventListener("mousedown", listener);
-            document.removeEventListener("touchstart", listener);
-        };
-    }, [ref, handler]);
-}
 
 const CloseIcon = ({ className = "" }) => {
     return (React.createElement("svg", { className: className, fill: "currentColor", viewBox: "0 0 20 20", xmlns: "http://www.w3.org/2000/svg" },
@@ -33311,9 +33294,6 @@ const Select = ({ options = [], value = null, onChange, onSearchInputChange, pla
         if (open)
             setOpen(false);
     }, [open]);
-    useOnClickOutside(ref, () => {
-        closeDropDown();
-    });
     const onPressEnterOrSpace = useCallback((e) => {
         e.preventDefault();
         if ((e.code === "Enter" || e.code === "Space") && !isDisabled) {
@@ -33376,7 +33356,7 @@ const Select = ({ options = [], value = null, onChange, onSearchInputChange, pla
             classNames
         }, value: value, handleValueChange: handleValueChange },
         React.createElement("div", { className: "relative w-full", ref: ref },
-            React.createElement(Popover.Popover, { isOpen: open, content: (React.createElement("div", { className: classNames?.menu
+            React.createElement(Popover.Popover, { isOpen: open, positions: ['top'], onClickOutside: closeDropDown, padding: 10, content: ({ childRect }) => (React.createElement("div", { style: { width: childRect.width + 'px' }, className: classNames?.menu
                         ? classNames.menu
                         : " bg-white shadow-lg border rounded py-1 mt-1.5 text-sm text-gray-700" },
                     isSearchable && (React.createElement(SearchInput, { ref: searchBoxRef, value: inputValue, placeholder: searchInputPlaceholder, onChange: e => {
