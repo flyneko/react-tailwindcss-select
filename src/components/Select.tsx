@@ -177,14 +177,13 @@ const Select: React.FC<SelectProps> = ({
             <div className="relative w-full" ref={ref}>
                 <Popover
                     isOpen={open}
-                    positions={['bottom', 'top']}
                     containerClassName="z-[9999]"
                     reposition={true}
                     onClickOutside={closeDropDown}
-                    padding={10}
+                    padding={5}
                     content={({ childRect }) => (
                         <div
-                            style={{ width: childRect.width + 'px' }}
+                            style={{ minWidth: childRect.width + 'px' }}
                             className={
                                 classNames?.menu
                                     ? classNames.menu
